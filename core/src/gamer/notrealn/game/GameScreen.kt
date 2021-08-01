@@ -22,7 +22,8 @@ class GameScreen(private val game: KotlinGame) : Screen {
 
     private var world = World(Vector2(0f, -128f), true)
     private var debugRenderer = Box2DDebugRenderer()
-    private var player: Body
+    private var player = Player(world)
+//    private var playerBody: Body
     private var img = Texture("ohno.png")
 
     init {
@@ -41,22 +42,22 @@ class GameScreen(private val game: KotlinGame) : Screen {
         groundBody.createFixture(groundBox, 0.0f)
         groundBox.dispose()
 
-        val bodyDef = BodyDef()
-        bodyDef.type = BodyDef.BodyType.DynamicBody
-        bodyDef.position.set(100f, 100f)
-        val body = world.createBody(bodyDef)
-        player = body
-
-        val box = PolygonShape()
-        box.setAsBox(16f, 16f)
-
-        val fixtureDef = FixtureDef()
-        fixtureDef.shape = box
-        fixtureDef.density = 0.1f
-        fixtureDef.friction = 1f
-        body.createFixture(fixtureDef)
-
-        box.dispose()
+//        val bodyDef = BodyDef()
+//        bodyDef.type = BodyDef.BodyType.DynamicBody
+//        bodyDef.position.set(100f, 100f)
+//        val body = world.createBody(bodyDef)
+//        playerBody = body
+//
+//        val box = PolygonShape()
+//        box.setAsBox(16f, 16f)
+//
+//        val fixtureDef = FixtureDef()
+//        fixtureDef.shape = box
+//        fixtureDef.density = 0.1f
+//        fixtureDef.friction = 1f
+//        body.createFixture(fixtureDef)
+//
+//        box.dispose()
     }
 
     override fun show() {
@@ -70,17 +71,7 @@ class GameScreen(private val game: KotlinGame) : Screen {
         debugRenderer.render(world, camera.combined)
         world.step(1 / 60f, 6, 2)
 
-        if (Gdx.input.isKeyPressed(Input.Keys.A)) {
-            player.applyLinearImpulse(-640f, 0f, player.position.x, player.position.y, true)
-        }
-
-        if (Gdx.input.isKeyPressed(Input.Keys.D)) {
-            player.applyLinearImpulse(640f, 0f, player.position.x, player.position.y, true)
-        }
-
-        if (Gdx.input.isKeyPressed(Input.Keys.W)) {
-            player.applyLinearImpulse(0f, 640f, player.position.x, player.position.y, true)
-        }
+        player.update()
     }
 
     override fun resize(width: Int, height: Int) {
